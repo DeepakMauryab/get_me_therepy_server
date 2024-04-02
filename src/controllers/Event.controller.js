@@ -7,6 +7,15 @@ import { addMinutesInDate } from "../utils/utils.js";
 
 import dotenv from "dotenv";
 
+import path from "path";
+import { fileURLToPath } from "url";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const keyPath = path.join(
+  __dirname,
+  "../../event-system-8b12b-19e62ca52294.json"
+);
+
 dotenv.config({
   path: "./config.env",
 });
@@ -95,7 +104,7 @@ export const createEvent = AsyncHandler(async (req, res) => {
     },
   };
   const auth = new google.auth.GoogleAuth({
-    keyFile: "D:\\get_me_therepy\\server\\event-system-8b12b-19e62ca52294.json",
+    keyFile: keyPath,
     scopes: "https://www.googleapis.com/auth/calendar", //full access to edit calendar
   });
   auth.getClient().then((a) => {
