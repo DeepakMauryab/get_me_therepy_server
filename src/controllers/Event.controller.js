@@ -3,20 +3,10 @@ import ApiResponse from "../utils/ApiResponse.js";
 import AsyncHandler from "../utils/AsyncHandler.js";
 import { google } from "googleapis";
 import ApiError from "../utils/ApiError.js";
-import { addMinutesInDate } from "../utils/utils.js";
+import { addMinutesInDate, getFormatedTime } from "../utils/utils.js";
 
 import dotenv from "dotenv";
-
-import path from "path";
-import { fileURLToPath } from "url";
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const keyPath = path.join(
-  __dirname,
-  "../../event-system-8b12b-19e62ca52294.json"
-);
-
-console.log(keyPath);
+import sendMail from "../services/Mailer.js";
 
 dotenv.config({
   path: "./config.env",
@@ -82,18 +72,20 @@ export const getEvents = AsyncHandler(async (_, res) => {
 });
 
 export const createEvent = AsyncHandler(async (req, res) => {
-  const { username } = req.body;
+  const { username, email } = req.body;
+  const from = new Date();
+  const to = addMinutesInDate(new Date(), 10);
 
   const event = {
     summary: `${username} Login Event`,
     location: "Delhi, India",
     description: "This is event for internship in Get Me therepy IT Company",
     start: {
-      dateTime: new Date().toISOString(),
+      dateTime: from.toISOString(),
       timeZone: "Asia/Kolkata",
     },
     end: {
-      dateTime: addMinutesInDate(new Date(), 10),
+      dateTime: to.toISOString(),
       timeZone: "Asia/Kolkata",
     },
     attendees: [],
@@ -106,7 +98,7 @@ export const createEvent = AsyncHandler(async (req, res) => {
     },
   };
   const auth = new google.auth.GoogleAuth({
-    keyFile: keyPath,
+    keyFile: "event-system-8b12b-19e62ca52294.json",
     scopes: "https://www.googleapis.com/auth/calendar", //full access to edit calendar
   });
   auth.getClient().then((a) => {
@@ -125,6 +117,12 @@ export const createEvent = AsyncHandler(async (req, res) => {
             { err }
           );
         }
+        console.log(event.data);
+        sendMail(
+          email,
+          `Event Created from : ${from.toLocaleTimeString()}, to : ${to.toLocaleTimeString()} on ${from.toLocaleDateString()}`,
+          `${username} Login Event, `
+        );
         return ApiResponse(
           res,
           StatusCodes.OK,

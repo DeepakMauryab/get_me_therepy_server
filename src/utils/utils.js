@@ -16,5 +16,20 @@ export const jwtGenerate = (payload) => {
   return token;
 };
 export function addMinutesInDate(date, minutes) {
-  return new Date(date.getTime() + minutes * 60000).toISOString();
+  return new Date(date.getTime() + minutes * 60000);
 }
+
+export const getFormatedTime = (time) => {
+  if (time) {
+    let hours = new Date(time).getTime();
+    let minutes = new Date(time).getMinutes();
+    let ampm = hours >= 12 ? "PM" : "AM";
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+    minutes = minutes?.length < 2 ? "0" + minutes : minutes;
+    var strTime = hours + ":" + minutes + " " + ampm;
+    return strTime;
+  } else {
+    return "00:00";
+  }
+};
