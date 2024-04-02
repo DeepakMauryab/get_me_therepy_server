@@ -99,7 +99,7 @@ export const createEvent = AsyncHandler(async (req, res) => {
   };
   const auth = new google.auth.GoogleAuth({
     keyFile: "event-system-8b12b-19e62ca52294.json",
-    scopes: "https://www.googleapis.com/auth/calendar", //full access to edit calendar
+    scopes: "https://www.googleapis.com/auth/calendar",
   });
   auth.getClient().then((a) => {
     calendar.events.insert(
@@ -117,11 +117,14 @@ export const createEvent = AsyncHandler(async (req, res) => {
             { err }
           );
         }
-        console.log(event.data);
+
         sendMail(
           email,
-          `Event Created from : ${from.toLocaleTimeString()}, to : ${to.toLocaleTimeString()} on ${from.toLocaleDateString()}`,
-          `${username} Login Event, `
+          `${username} Login Event`,
+          `Event Created from : ${from.toLocaleTimeString()}, to : ${to.toLocaleTimeString()} on ${from.toLocaleDateString()}
+          <br/>
+          <a href="${event.data?.htmlLink}">${event.data?.htmlLink}</a>
+          `
         );
         return ApiResponse(
           res,

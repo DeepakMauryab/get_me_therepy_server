@@ -19,7 +19,7 @@ const sendMail = (email, subject, text) => {
     from: "cslab4086@gmail.com",
     to: email,
     subject,
-    text,
+    html: `<div>${text}</div>`,
   };
   transporter.sendMail(options, (err, res) => {
     if (err) {
