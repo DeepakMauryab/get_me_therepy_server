@@ -16,6 +16,8 @@ const keyPath = path.join(
   "../../event-system-8b12b-19e62ca52294.json"
 );
 
+console.log(keyPath);
+
 dotenv.config({
   path: "./config.env",
 });
