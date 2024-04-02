@@ -19,14 +19,6 @@ const GOOGLE_CLIENT_EMAIL = process.env.GOOGLE_CLIENT_EMAIL;
 const GOOGLE_PROJECT_NUMBER = process.env.GOOGLE_PROJECT_NUMBER;
 const GOOGLE_CALENDAR_ID = process.env.GOOGLE_CALENDAR_ID;
 
-console.log(
-  GOOGLE_PRIVATE_KEY,
-  GOOGLE_CLIENT_EMAIL,
-  GOOGLE_PROJECT_NUMBER,
-  GOOGLE_CALENDAR_ID,
-  process.env.GOOGLE_PRIVATE_KEY
-);
-
 const jwtClient = new google.auth.JWT(
   GOOGLE_CLIENT_EMAIL,
   null,
@@ -40,7 +32,7 @@ const calendar = google.calendar({
   auth: jwtClient,
 });
 
-export const getEvents = AsyncHandler(async (req, res) => {
+export const getEvents = AsyncHandler(async (_, res) => {
   calendar.events.list(
     {
       calendarId: GOOGLE_CALENDAR_ID,
@@ -79,10 +71,8 @@ export const getEvents = AsyncHandler(async (req, res) => {
 });
 
 export const createEvent = AsyncHandler(async (req, res) => {
-  console.log(username);
-  res.send({ mess: "dsjf" });
-  return;
   const { username } = req.body;
+
   const event = {
     summary: `${username} Login Event`,
     location: "Delhi, India",
