@@ -1,0 +1,6 @@
+env
+/config.env
+/node_modules
+/package-lock.json
+
+/event-system-8b12b-19e62ca52294.json
